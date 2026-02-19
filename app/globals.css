@@ -1,0 +1,293 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 240 6% 6%;
+    --foreground: 0 0% 95%;
+    --card: 240 5% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 240 5% 10%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 263 70% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 4% 14%;
+    --secondary-foreground: 0 0% 85%;
+    --muted: 240 4% 14%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 263 70% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 4% 18%;
+    --input: 240 4% 18%;
+    --ring: 263 70% 55%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0d0f;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a2e;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7c3aed;
+}
+
+/* Glow animations */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.3), 0 0 60px rgba(124, 58, 237, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(124, 58, 237, 0.5), 0 0 80px rgba(124, 58, 237, 0.2);
+  }
+}
+
+@keyframes border-rotate {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes spin-border {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    hsl(0 0% 95%) 0%,
+    hsl(263 70% 70%) 50%,
+    hsl(0 0% 95%) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Animated border for Get Notified button */
+@keyframes spin-border-btn {
+  from { --border-angle: 0deg; }
+  to { --border-angle: 360deg; }
+}
+
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.animated-border {
+  --border-angle: 0deg;
+  animation: spin-border-btn 3s linear infinite;
+  background:
+    conic-gradient(from var(--border-angle), transparent 30%, #7c3aed 50%, transparent 70%) border-box;
+  border: 1px solid transparent;
+  position: relative;
+}
+
+.animated-border::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: #0d0d0f;
+  z-index: 0;
+}
+
+.animated-border > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* (card borders now handled by framer-motion in features.tsx) */
+
+/* Feature card animated spinning border */
+@keyframes spin-card-border {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.feature-card-wrapper {
+  position: relative;
+  border-radius: 1rem;
+  padding: 1px;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+}
+
+.feature-card-border {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  margin-top: -100%;
+  margin-left: -100%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    transparent 30%,
+    #7c3aed 50%,
+    transparent 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 0;
+}
+
+.feature-card-wrapper:hover .feature-card-border {
+  opacity: 1;
+  animation: spin-card-border 4s linear infinite;
+}
+
+/* Static border when not hovered */
+.feature-card-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid #1e1e22;
+  transition: opacity 0.5s ease;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.feature-card-wrapper:hover::before {
+  opacity: 0;
+}
+
+.feature-card-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  border-radius: calc(1rem - 1px);
+  background: #0c0c0e;
+  padding: 2rem;
+}
+
+/* Anti-cheat card animated spinning border */
+.ac-card-wrapper {
+  position: relative;
+  border-radius: 1rem;
+  padding: 1px;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+}
+
+.ac-card-border {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  margin-top: -100%;
+  margin-left: -100%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    transparent 25%,
+    #7c3aed 40%,
+    #10b981 50%,
+    #7c3aed 60%,
+    transparent 75%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 0;
+}
+
+.ac-card-wrapper:hover .ac-card-border {
+  opacity: 1;
+  animation: spin-card-border 3s linear infinite;
+}
+
+.ac-card-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid #1e1e22;
+  transition: opacity 0.5s ease;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.ac-card-wrapper:hover::before {
+  opacity: 0;
+}
+
+.ac-card-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  border-radius: calc(1rem - 1px);
+  background: #0a0a0c;
+  padding: 1.75rem 1.25rem;
+  transition: background 0.5s ease;
+}
+
+.ac-card-wrapper:hover .ac-card-content {
+  background: #0d0d10;
+}
